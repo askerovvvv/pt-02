@@ -23,4 +23,7 @@ class GameInfoSerializer(serializers.Serializer):
 
 
 
+class TestSerializer(serializers.Serializer):
+    num1 = serializers.IntegerField()
+    num2 = serializers.IntegerField()
 

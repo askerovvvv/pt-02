@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from app.models import GameInformation
-from app.serializers import GameInfoSerializer
+from app.serializers import GameInfoSerializer, TestSerializer
 
 
 # Create your views here.
@@ -52,6 +52,30 @@ def update_game(request, id):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["DELETE"])
+def delete_game(request, id):
+    game = GameInformation.objects.filter(id=id).first()
+    if not game:
+        return Response({"message": "Game Not found"}, status=status.HTTP_404_NOT_FOUND)
+    game.delete()
+    return Response({"message": "deleted!"}, status=status.HTTP_200_OK)
+
+import random
+
+@api_view(["POST"])
+def create_random_number(request):
+    print(request.data)
+    serializer = TestSerializer(data=request.data)
+    if serializer.is_valid():
+        num1 = serializer.data.get("num1")
+        num2 = serializer.data.get("num2")
+        if num1 > num2:
+            return Response({"message": "nelzya"}, status=400)
+        return Response({"number:": random.randint(num1, num2)}, status=200)
+    return Response("", status=500)
+
 
 
 
