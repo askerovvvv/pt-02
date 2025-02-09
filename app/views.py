@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
 from rest_framework.response import Response
 
-from app.models import GameInformation
-from app.serializers import GameInfoSerializer, TestSerializer
+from app.models import GameInformation, Category
+from app.serializers import GameInfoSerializer, TestSerializer, CategorySerializer
 
 
 # Create your views here.
@@ -77,6 +78,22 @@ def create_random_number(request):
     return Response("", status=500)
 
 
+class CreateGameApiView(CreateAPIView):
+    queryset = GameInformation.objects.all()
+    serializer_class = GameInfoSerializer
 
 
 
+class GameListApiView(ListAPIView):
+    queryset = GameInformation.objects.all()
+    serializer_class = GameInfoSerializer
+
+
+class GameRetrieveApiView(RetrieveAPIView):
+    queryset = GameInformation.objects.all()
+    serializer_class = GameInfoSerializer
+
+
+class CategoryListCreateAPIView(ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer

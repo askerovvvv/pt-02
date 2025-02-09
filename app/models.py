@@ -1,7 +1,11 @@
 from django.db import models
 
 
-# Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=1)
+    full_name = models.CharField(max_length=50)
+
+
 class GameInformation(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField()

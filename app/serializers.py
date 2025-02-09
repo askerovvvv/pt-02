@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from app.models import GameInformation
+from app.models import GameInformation, Category
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ["id", "name", "full_name"]
 
 
 class GameInfoSerializer(serializers.Serializer):
