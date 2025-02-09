@@ -10,14 +10,14 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id", "name", "full_name"]
 
 
-class GameInfoSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=50)
-    price = serializers.IntegerField()
-    version = serializers.IntegerField()
-    date_issue = serializers.DateField()
-    company_name = serializers.CharField(max_length=50)
+class GameInfoSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
+    category = CategorySerializer()
+
+    class Meta:
+        model = GameInformation
+        fields = "__all__"
 
     def create(self, validated_data):
         return GameInformation.objects.create(**validated_data)
