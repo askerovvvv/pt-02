@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from app.models import GameInformation, Category
@@ -83,10 +84,33 @@ class CreateGameApiView(CreateAPIView):
     serializer_class = GameInfoSerializer
 
 
+class GamePagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
 
 class GameListApiView(ListAPIView):
     queryset = GameInformation.objects.all()
     serializer_class = GameInfoSerializer
+    pagination_class = GamePagination
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        category_id = self.request.query_params.get("category")
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
+
+        by_company = self.request.query_params.get("by_company")
+        if by_company:
+            queryset = queryset.filter(company_name=by_company)
+
+        min_price = self.request.query_params.get("min_price")
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+
+        return queryset
 
 
 class GameRetrieveApiView(RetrieveAPIView):
