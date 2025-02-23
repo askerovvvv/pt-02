@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from app.models import GameInformation, Category
@@ -91,13 +92,14 @@ class GamePagination(PageNumberPagination):
 
 
 class GameListApiView(ListAPIView):
+    permission_classes = [IsAdminUser]
+
     queryset = GameInformation.objects.all()
     serializer_class = GameInfoSerializer
     pagination_class = GamePagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
         category_id = self.request.query_params.get("category")
         if category_id:
             queryset = queryset.filter(category__id=category_id)
